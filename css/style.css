@@ -1,49 +1,60 @@
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #FFA500;
-    /* Cor laranja para o background */
-}
-
-.container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-.form-container {
-    max-width: 400px;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-}
-
-.logo {
-    margin-bottom: 30px;
-}
-
-input[type="email"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-}
-
-.error-message {
+.error {
     color: red;
+    font-size: 14px;
     margin-top: 5px;
 }
 
-input[type="submit"] {
-    width: 100%;
-    padding: 10px;
-    background-color: #333;
-    color: #fff;
-    border: none;
-    cursor: pointer;
+.success {
+    color: green;
+    font-size: 14px;
+    margin-top: 5px;
 }
 
-.alert {
-    margin-top: 30px;
+.body-center {
+    background: #00000a;
+    display: flex;
+    flex-direction: column;
+    gap: 3em;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: var(--size);
 }
+.body-center .container {
+    background: #fff;
+    border: 10px solid #fff;
+    border-radius: vh;
+    padding: 20px;
+}
+
+.logo {
+    max-width: 200px;
+    margin-bottom: 20px;
+}
+
+.name-override {
+    color: #00000a;
+}
+
+/* Estilização do label */
+.label-name {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-weight: bold;
+}
+
+/* Estilização do input */
+.form-control {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Estilização do input quando em foco */
+.form-control .focus {
+    border-color: #00b300;
+    box-shadow: 0 0 5px rgba(0, 179, 0, 0.5);
+}
+

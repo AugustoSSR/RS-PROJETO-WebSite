@@ -1,45 +1,67 @@
-document.getElementById('signup-form').addEventListener('submit', function (event) {
-    var emailInput = document.querySelector('input[name="email"]');
-    var errorMessage = document.getElementById('email-error');
+$(document).ready(function () {
+    $('#contactForm').submit(function (e) {
+        e.preventDefault();
+        $('.error').remove();
+        $('.success').remove();
 
-    if (!validateEmail(emailInput.value)) {
-        errorMessage.textContent = 'Por favor, insira um e-mail válido.';
-        showAlert('Por favor, insira um e-mail válido.', 'danger');
-        event.preventDefault();
-    } else {
-        errorMessage.textContent = '';
-        var formData = new FormData(this);
+        var name = $('#name').val().trim();
+        var company = $('#company').val().trim();
+        var email = $('#email').val().trim();
+        var attachment = $('#attachment').val().trim();
+        // Validação dos campos
+        if (name === '') {
+            $('#name').after('<div class="error">Por favor, digite seu nome.</div>');
+        }
 
-        fetch(this.action, {
-            method: this.method,
-            body: formData
-        })
-            .then(function (response) {
-                if (response.ok) {
-                    showAlert('Obrigado por se inscrever! Seu e-mail foi enviado com sucesso.', 'success');
-                } else {
-                    showAlert('Ocorreu um erro. Por favor, tente novamente mais tarde.', 'danger');
-                }
-            })
-            .catch(function (error) {
-                showAlert('Ocorreu um erro. Por favor, tente novamente mais tarde.', 'danger');
+        if (company === '') {
+            $('#company').after('<div class="error">Por favor, digite o nome da empresa.</div>');
+        }
+
+        if (email === '') {
+            $('#email').after('<div class="error">Por favor, digite um endereço de e-mail válido.</div>');
+            // email válido
+        } else if (!isValidEmail(email)) {
+            $('#email').after('<div class="error">Por favor, digite um endereço de e-mail válido.</div>');
+        }
+
+        // Verifica se há algum erro antes de enviar o formulário
+        if ($('.error').length === 0) {
+            var formData = new FormData(this);
+
+            // Envia os dados do formulário para o arquivo PHP
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    if (response === 'success') {
+                        $('#contactForm').append('<div class="success">O e-mail foi enviado com sucesso!</div>');
+                        $('#name').val('');
+                        $('#company').val('');
+                        $('#email').val('');
+                        $('#attachment').val('');
+                        setTimeout(function () {
+                            window.location.href = 'index.html';
+                        }, 3000);
+                    } else if (response === 'duplicate') {
+                        $('#formAlerts').html('<div class="alert alert-danger">O e-mail já está cadastrado.</div>');
+                    } else {
+                        $('#formAlerts').html('<div class="alert alert-danger">Ocorreu um erro ao enviar o e-mail.</div>');
+                    }
+                },
+                error: function () {
+                    $('#formAlerts').html('<div class="alert alert-danger">Ocorreu um erro ao enviar o e-mail.</div>');
+                },
+                cache: false,
+                contentType: false,
+                processData: false
             });
+        }
+    });
 
-        event.preventDefault();
+    // Função para validar o formato do e-mail
+    function isValidEmail(email) {
+        var pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return pattern.test(email);
     }
 });
-
-function validateEmail(email) {
-    var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-}
-
-function showAlert(message, type) {
-    const alert = `
-    <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-      ${message}
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-  `;
-    document.querySelector('#alerts').innerHTML = alert;
-}
